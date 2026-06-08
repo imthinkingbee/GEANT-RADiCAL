@@ -57,15 +57,30 @@ shifting, and a simple SiPM/electronics readout model.
 ## Build
 
 GEANT4 11.x (built with Qt/OpenGL for visualization) and CMake ≥ 3.16 are
-required. **Neither is installed on this machine** — build on a system that has
-GEANT4 (lxplus, a cluster, or a local install; see
-<https://geant4.web.cern.ch/download>).
+required. The easiest local install is via conda-forge:
 
 ```bash
-cd GEANT-RADiCAL
-mkdir build && cd build
-cmake -DGeant4_DIR=/path/to/geant4-install/lib/Geant4-11.x.y ..
-make -j$(nproc)
+mamba create -n geant4 -c conda-forge geant4 cmake   # ~1-2 GB incl. data
+conda activate geant4
+```
+
+Then, from the repo root:
+
+```bash
+./configure.sh        # activates the geant4 env, configures + builds into ./build
+# (override env name with GEANT4_ENV=myenv ./configure.sh ; "./configure.sh clean" to wipe)
+```
+
+`configure.sh` passes the EXPAT flags needed on macOS (the system SDK ships an
+older expat that CMake otherwise rejects). Manual equivalent:
+
+```bash
+cd GEANT-RADiCAL && mkdir build && cd build
+cmake -DGeant4_DIR=$(geant4-config --prefix)/lib/cmake/Geant4 \
+      -DCMAKE_PREFIX_PATH=$(geant4-config --prefix) \
+      -DEXPAT_INCLUDE_DIR=$(geant4-config --prefix)/include \
+      -DEXPAT_LIBRARY=$(geant4-config --prefix)/lib/libexpat.dylib ..
+make -j
 ```
 
 ## Run
@@ -79,7 +94,36 @@ make -j$(nproc)
 
 # Energy scan 25–150 GeV (one ROOT file per energy):
 ./radical scan_energy.mac
+
+# Full resolution scan (5, 25, 50 … 400 GeV), one ROOT file per energy:
+./radical scan_resolution.mac
 ```
+
+## Resolution analysis
+
+`analysis/analyze_resolution.py` turns the per-energy ROOT files into energy- and
+timing-resolution-vs-energy plots and fits.
+
+```bash
+pip install -r analysis/requirements.txt        # uproot numpy scipy matplotlib
+cd build && ./radical scan_resolution.mac        # produces radical_<E>GeV.root
+python ../analysis/analyze_resolution.py --indir . --outdir plots
+```
+
+It applies the paper's selection (radial cut `hypot(beamX,beamY) < 2 mm`, plus a
+Pb-glass leakage cut), then:
+
+- **Energy resolution** from the sampled LYSO energy (`eTotLyso_MeV` by default;
+  `--energy-var eSM3_MeV` for the shower-max estimator), fit to
+  σ_E/E = a/√E ⊕ b/E ⊕ c.
+- **Timing resolution** from the MCP-independent estimator
+  q = (⟨t_downstream⟩ − ⟨t_upstream⟩)/2 using the per-channel leading-edge
+  stamps, fit to σ_t = a/√E ⊕ b (paper: a = 256 ps·√GeV, b = 17.5 ps).
+
+Outputs: `plots/energy_resolution.png`, `plots/timing_resolution.png`,
+`plots/resolution_summary.csv`. **Absolute** timing/p.e. numbers depend on the
+estimated optical inputs (see `ESTIMATES.md`) — read the *trends* until you tune
+the light-yield × WLS-QY × PDE product to bench data.
 
 ### Useful UI commands
 ```

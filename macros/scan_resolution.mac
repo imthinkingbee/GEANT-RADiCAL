@@ -1,0 +1,84 @@
+# Energy + timing resolution scan.
+# Energies: 5 GeV, then 25 -> 400 GeV in 25 GeV steps. One ROOT file per energy
+# (radical_<E>GeV.root), consumed by analysis/analyze_resolution.py.
+#
+# NOTE: full optical transport at high energy is CPU-heavy (a 400 GeV shower
+# makes ~1e8 optical photons). Reduce /run/beamOn, or lower /run/numberOfThreads
+# to fit your machine. Energy resolution is robust to fewer events; timing
+# resolution wants more statistics after the radial/leakage cuts.
+
+/radical/det/buildBeamline true
+/run/numberOfThreads 8
+/run/initialize
+
+/gun/particle e-
+/radical/gun/spotSize 3.0 mm
+/run/printProgress 200
+
+/analysis/setFileName radical_5GeV
+/gun/energy 5 GeV
+/run/beamOn 2000
+
+/analysis/setFileName radical_25GeV
+/gun/energy 25 GeV
+/run/beamOn 2000
+
+/analysis/setFileName radical_50GeV
+/gun/energy 50 GeV
+/run/beamOn 2000
+
+/analysis/setFileName radical_75GeV
+/gun/energy 75 GeV
+/run/beamOn 2000
+
+/analysis/setFileName radical_100GeV
+/gun/energy 100 GeV
+/run/beamOn 2000
+
+/analysis/setFileName radical_125GeV
+/gun/energy 125 GeV
+/run/beamOn 2000
+
+/analysis/setFileName radical_150GeV
+/gun/energy 150 GeV
+/run/beamOn 2000
+
+/analysis/setFileName radical_175GeV
+/gun/energy 175 GeV
+/run/beamOn 2000
+
+/analysis/setFileName radical_200GeV
+/gun/energy 200 GeV
+/run/beamOn 2000
+
+/analysis/setFileName radical_225GeV
+/gun/energy 225 GeV
+/run/beamOn 2000
+
+/analysis/setFileName radical_250GeV
+/gun/energy 250 GeV
+/run/beamOn 2000
+
+/analysis/setFileName radical_275GeV
+/gun/energy 275 GeV
+/run/beamOn 2000
+
+/analysis/setFileName radical_300GeV
+/gun/energy 300 GeV
+/run/beamOn 2000
+
+/analysis/setFileName radical_325GeV
+/gun/energy 325 GeV
+/run/beamOn 2000
+
+/analysis/setFileName radical_350GeV
+/gun/energy 350 GeV
+/run/beamOn 2000
+
+/analysis/setFileName radical_375GeV
+/gun/energy 375 GeV
+/run/beamOn 2000
+
+/analysis/setFileName radical_400GeV
+/gun/energy 400 GeV
+/run/beamOn 2000
