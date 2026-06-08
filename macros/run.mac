@@ -1,0 +1,19 @@
+# Batch run: single energy, full physics + optics.
+# Detector build flags must be set BEFORE /run/initialize.
+/radical/det/buildBeamline true
+/radical/det/buildPbGlass true
+/radical/det/buildMCP true
+/radical/det/buildTriggers true
+# /radical/det/lysoYieldScale 1.0
+# /radical/det/wlsCenterZ 0. mm
+
+/run/numberOfThreads 4
+/run/initialize
+
+/analysis/setFileName radical_50GeV
+
+/gun/particle e-
+/gun/energy 50 GeV
+
+/run/printProgress 50
+/run/beamOn 200

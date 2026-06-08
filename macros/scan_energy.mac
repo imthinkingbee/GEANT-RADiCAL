@@ -1,0 +1,31 @@
+# Energy scan reproducing the beam-test points: 25..150 GeV in 25 GeV steps.
+# A separate ROOT file is written per energy.
+/radical/det/buildBeamline true
+/run/numberOfThreads 4
+/run/initialize
+/gun/particle e-
+
+/analysis/setFileName radical_25GeV
+/gun/energy 25 GeV
+/run/printProgress 100
+/run/beamOn 1000
+
+/analysis/setFileName radical_50GeV
+/gun/energy 50 GeV
+/run/beamOn 1000
+
+/analysis/setFileName radical_75GeV
+/gun/energy 75 GeV
+/run/beamOn 1000
+
+/analysis/setFileName radical_100GeV
+/gun/energy 100 GeV
+/run/beamOn 1000
+
+/analysis/setFileName radical_125GeV
+/gun/energy 125 GeV
+/run/beamOn 1000
+
+/analysis/setFileName radical_150GeV
+/gun/energy 150 GeV
+/run/beamOn 1000

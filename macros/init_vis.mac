@@ -1,0 +1,4 @@
+# Initialization + visualization setup (interactive mode)
+/run/numberOfThreads 1
+/run/initialize
+/control/execute vis.mac

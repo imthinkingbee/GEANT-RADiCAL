@@ -1,0 +1,22 @@
+# Build artifacts
+/build/
+*.o
+*.obj
+*.so
+*.dylib
+*.a
+
+# Simulation output
+*.root
+*.csv
+*.hdf5
+*.log
+
+# Local Claude Code settings
+.claude/
+
+# Editor / OS
+.DS_Store
+*.swp
+.vscode/
+.idea/
