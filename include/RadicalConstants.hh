@@ -94,6 +94,19 @@ namespace radical
   constexpr G4double kModuleLength = 135.0 * mm;
 
   //--------------------------------------------------------------------------
+  // Optical-photon tracking caps (SPEED + MEMORY).
+  // Optical photons exceeding either cap are killed in SteppingAction. They
+  // remove the long-lived strays that keep bouncing in the Tyvek/quartz without
+  // being detected, which dominate CPU time and inflate the peak live-photon
+  // count (the latter is what triggers out-of-memory kills on small-RAM
+  // machines). The timing observables use the leading edge (first / k-th p.e.),
+  // which arrives within a few ns, so these caps barely affect timing; they DO
+  // trim the late tail of the detected-p.e. SUM. Set kMaxOpticalTime <= 0 to
+  // disable the time cap.
+  constexpr G4double kMaxOpticalTime  = 50.0 * ns;
+  constexpr G4int    kMaxOpticalSteps = 2000;
+
+  //--------------------------------------------------------------------------
   // Beam-test elements (Section 4, Fig. 11c). All optional via messenger.
   // Order along +z beam: A1 trigger, A2 trigger, MCP, MODULE(0), Pb-glass.
   //--------------------------------------------------------------------------

@@ -119,13 +119,23 @@ Repo: https://github.com/imthinkingbee/GEANT-RADiCAL (branch `main`).
 - **`/process/optical/processActivation Cerenkov|Scintillation false` must be
   issued BEFORE `/run/initialize`** (PreInit), else "Illegal application state".
   This is the fast path for energy-only runs (no optical photons).
-- **Performance**: full optics is very heavy (10⁷–10⁸ photons/evt; 18 cm capillary
-  TIR + 95% Tyvek = many steps/photon). Full `scan_resolution.mac` at nominal
-  yield ≈ hours–days on 8 cores. Mitigations: run energy resolution with optics
-  off (fast); run timing with optics on at fewer events; or
-  `/radical/det/lysoYieldScale <small>` (changes p.e. scale — don't use for
-  absolute light/timing). Recommended split: `scan_energy_fast` (optics off) +
-  smaller optics-on timing scan. (Not yet committed; offer to add.)
+- **Performance + MEMORY (this machine has only 8 GB RAM)**: full optics is very
+  heavy (10⁷–10⁸ photons/evt; 18 cm capillary TIR + 95% Tyvek = many steps/photon).
+  Each MT worker holds one event's photon stack, so peak RAM ≈ per-event × threads.
+  On 8 GB, too many threads → **OS OOM-kills the job during the first event**
+  ("killed after one event"). Mitigations, in order of impact:
+  1. Energy resolution → run **optics off** (`scan_energy_fast.mac`; fast, tiny RAM,
+     can use all 8 threads). Optics off via `/process/optical/processActivation
+     Cerenkov|Scintillation false` (PreInit).
+  2. Full optics → **few threads** (run.mac defaults to 2) and/or
+     `/radical/det/lysoYieldScale <small>` (fewer photons; changes p.e. scale —
+     not for absolute light/timing).
+  3. Optical-photon caps in `SteppingAction` kill strays older than
+     `kMaxOpticalTime` (50 ns) or beyond `kMaxOpticalSteps` (2000) — see
+     `RadicalConstants.hh`. Cuts CPU tail + caps peak memory; trims late p.e. sum
+     but not the leading-edge timing. Tune/disable there.
+  - Split scans committed: `scan_energy_fast.mac` (optics off) +
+    `scan_timing.mac` (optics on, fewer events). `scan_resolution.mac` = full both.
 - **MT thread-safety**: LYSO yield rescaling is done once in `Construct()` (master),
   NOT per-worker in `ConstructSDandField()`.
 - Geometry uses `checkOverlaps=true` on all placements; all currently pass.

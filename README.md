@@ -139,10 +139,20 @@ the light-yield × WLS-QY × PDE product to bench data.
 /run/beamOn 100
 ```
 
-> ⚠️ **Performance.** A 150 GeV EM shower produces ~10⁷–10⁸ optical photons per
-> event with the nominal light yield, so full-optics runs are CPU-heavy and meant
-> for batch/cluster use. For quick geometry/shower checks, throttle the optical
-> load with `/radical/det/lysoYieldScale 0.01` (energy scoring is unaffected).
+> ⚠️ **Performance & memory.** A high-energy EM shower produces ~10⁷–10⁸ optical
+> photons per event at nominal light yield. Each multithread worker holds one
+> event's photon stack, so **peak RAM ≈ per-event × number of threads** — on a
+> small-RAM machine (e.g. 8 GB) using too many threads makes the OS **kill the job
+> during the first event**. Mitigations:
+> - **Energy resolution:** run with **optics off** — fast and tiny memory, can use
+>   all cores (`scan_energy_fast.mac`, or add `/process/optical/processActivation
+>   Cerenkov false` + `… Scintillation false` before `/run/initialize`).
+> - **Full optics:** use **few threads** (`run.mac` defaults to 2) and/or throttle
+>   photons with `/radical/det/lysoYieldScale 0.05` (changes the p.e. scale — not
+>   for absolute light/timing; energy scoring is unaffected).
+> - Stray optical photons are auto-killed after `kMaxOpticalTime` (50 ns) /
+>   `kMaxOpticalSteps` (2000) — see `RadicalConstants.hh` — which trims CPU and
+>   caps peak memory without affecting the leading-edge timing.
 
 ---
 

@@ -1,5 +1,6 @@
 #include "SteppingAction.hh"
 #include "EventAction.hh"
+#include "RadicalConstants.hh"
 
 #include "G4Step.hh"
 #include "G4Track.hh"
@@ -39,6 +40,14 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
           fEvent->AddSiPMDetection(ch, post->GetGlobalTime());
         }
       }
+    }
+
+    // SPEED/MEMORY: kill long-lived stray photons (see RadicalConstants.hh).
+    // Detected photons are already stopped by the boundary process above.
+    if (track->GetCurrentStepNumber() > radical::kMaxOpticalSteps ||
+        (radical::kMaxOpticalTime > 0. &&
+         post->GetGlobalTime() > radical::kMaxOpticalTime)) {
+      track->SetTrackStatus(fStopAndKill);
     }
     return;
   }

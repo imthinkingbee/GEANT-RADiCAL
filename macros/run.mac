@@ -1,13 +1,20 @@
 # Batch run: single energy, full physics + optics.
 # Detector build flags must be set BEFORE /run/initialize.
+#
+# MEMORY WARNING: full optics makes ~1e8 photons per 50 GeV event. Each worker
+# thread holds one event's photon stack, so peak RAM ~ (per-event) x threads.
+# On a small-RAM machine (e.g. 8 GB) too many threads -> the OS kills the job
+# during the first event. Keep threads LOW for full optics. If it still gets
+# killed, uncomment lysoYieldScale below (fewer photons; not for absolute light)
+# or run energy-only (see scan_energy_fast.mac).
 /radical/det/buildBeamline true
 /radical/det/buildPbGlass true
 /radical/det/buildMCP true
 /radical/det/buildTriggers true
-# /radical/det/lysoYieldScale 1.0
+# /radical/det/lysoYieldScale 0.2     # uncomment on low RAM to avoid OOM
 # /radical/det/wlsCenterZ 0. mm
 
-/run/numberOfThreads 4
+/run/numberOfThreads 2
 /run/initialize
 
 /analysis/setFileName radical_50GeV
@@ -15,5 +22,5 @@
 /gun/particle e-
 /gun/energy 50 GeV
 
-/run/printProgress 50
-/run/beamOn 200
+/run/printProgress 20
+/run/beamOn 100
