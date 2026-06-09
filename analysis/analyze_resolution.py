@@ -153,7 +153,19 @@ def main():
     ap.add_argument("--energy-var", default="eTotLyso_MeV",
                     choices=["eTotLyso_MeV", "eSM3_MeV", "eSM5_MeV"],
                     help="LYSO energy estimator for the energy resolution")
+    ap.add_argument("--format", default="png,pdf",
+                    help="comma-separated output image formats (e.g. 'pdf' or 'png,pdf')")
     args = ap.parse_args()
+    img_formats = [f.strip().lstrip(".") for f in args.format.split(",") if f.strip()]
+
+    def save_fig(fig, stem):
+        outs = []
+        for ext in img_formats:
+            p = os.path.join(args.outdir, f"{stem}.{ext}")
+            fig.savefig(p, dpi=150, bbox_inches="tight")
+            outs.append(p)
+        plt.close(fig)
+        return outs
 
     files = load_files(args.indir)
     if not files:
@@ -216,8 +228,7 @@ def main():
     ax.set_title(f"RADiCAL energy resolution ({args.energy_var})")
     ax.grid(alpha=0.3); ax.legend()
     fig.tight_layout()
-    f1 = os.path.join(args.outdir, "energy_resolution.png")
-    fig.savefig(f1, dpi=150); plt.close(fig)
+    f1 = save_fig(fig, "energy_resolution")
 
     # ---- timing resolution plot ----
     fig, ax = plt.subplots(figsize=(7, 5))
@@ -234,8 +245,7 @@ def main():
     ax.set_title("RADiCAL timing resolution  (DW$-$UP)/2")
     ax.grid(alpha=0.3); ax.legend()
     fig.tight_layout()
-    f2 = os.path.join(args.outdir, "timing_resolution.png")
-    fig.savefig(f2, dpi=150); plt.close(fig)
+    f2 = save_fig(fig, "timing_resolution")
 
     # ---- CSV summary ----
     csv = os.path.join(args.outdir, "resolution_summary.csv")
@@ -246,9 +256,8 @@ def main():
                      f"{St[i]:.4f},{dSt[i]:.4f}\n")
 
     print("\nWrote:")
-    print(" ", f1)
-    print(" ", f2)
-    print(" ", csv)
+    for p in (*f1, *f2, csv):
+        print(" ", p)
     if eres_fit is not None:
         a, b, c = eres_fit
         print(f"\nEnergy resolution fit ({args.energy_var}):")
