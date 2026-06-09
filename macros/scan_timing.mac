@@ -1,0 +1,57 @@
+# TIMING-resolution scan: full optical transport ON, nominal light yield.
+# Energies 5, 25, 50 ... 200 GeV; one ROOT file per energy.
+#
+# WARNING: full optics is CPU-heavy (millions of optical photons per event,
+# amplified by capillary light-guiding and Tyvek reflections). 200 events/energy
+# already takes a long time on a laptop; the full scan can take many hours.
+# Tune to your machine:
+#   - lower /run/beamOn (timing still usable with a few hundred events after cuts)
+#   - run fewer energies (delete blocks below)
+#   - DO NOT use /radical/det/lysoYieldScale here: it changes the photoelectron
+#     scale and therefore the timing resolution.
+#
+# Analyse with:  python ../analysis/analyze_resolution.py --indir . --outdir plots
+
+/radical/det/buildBeamline true
+/run/numberOfThreads 8
+/run/initialize
+
+/gun/particle e-
+/radical/gun/spotSize 3.0 mm
+/run/printProgress 50
+
+/analysis/setFileName radical_5GeV
+/gun/energy 5 GeV
+/run/beamOn 200
+
+/analysis/setFileName radical_25GeV
+/gun/energy 25 GeV
+/run/beamOn 200
+
+/analysis/setFileName radical_50GeV
+/gun/energy 50 GeV
+/run/beamOn 200
+
+/analysis/setFileName radical_75GeV
+/gun/energy 75 GeV
+/run/beamOn 200
+
+/analysis/setFileName radical_100GeV
+/gun/energy 100 GeV
+/run/beamOn 200
+
+/analysis/setFileName radical_125GeV
+/gun/energy 125 GeV
+/run/beamOn 200
+
+/analysis/setFileName radical_150GeV
+/gun/energy 150 GeV
+/run/beamOn 200
+
+/analysis/setFileName radical_175GeV
+/gun/energy 175 GeV
+/run/beamOn 200
+
+/analysis/setFileName radical_200GeV
+/gun/energy 200 GeV
+/run/beamOn 200

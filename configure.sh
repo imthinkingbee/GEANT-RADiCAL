@@ -7,7 +7,9 @@
 # Usage:
 #   ./configure.sh          # configure + build into ./build
 #   ./configure.sh clean    # remove ./build first
-set -euo pipefail
+# Note: no `set -u` here -- conda's activation scripts reference unset variables
+# (e.g. G4ABLADATA) and would abort under nounset.
+set -eo pipefail
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BUILD="$HERE/build"
