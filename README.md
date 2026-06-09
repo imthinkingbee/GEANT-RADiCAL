@@ -95,7 +95,7 @@ make -j
 # Energy scan 25–150 GeV (one ROOT file per energy):
 ./radical scan_energy.mac
 
-# Full resolution scan (5, 25, 50 … 400 GeV), one ROOT file per energy:
+# Full resolution scan (5, 25, 50 … 200 GeV), one ROOT file per energy:
 ./radical scan_resolution.mac
 ```
 
@@ -110,6 +110,7 @@ cd build && ./radical scan_resolution.mac        # produces radical_<E>GeV.root
 python ../analysis/analyze_resolution.py --indir . --outdir plots
 ```
 
+(`scan_resolution.mac` covers 5, 25, 50 … 200 GeV.)
 It applies the paper's selection (radial cut `hypot(beamX,beamY) < 2 mm`, plus a
 Pb-glass leakage cut), then:
 
