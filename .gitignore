@@ -12,6 +12,9 @@
 *.hdf5
 *.log
 
+# ...but DO track committed result artifacts under results/
+!results/*.csv
+
 # Local Claude Code settings
 .claude/
 
