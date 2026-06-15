@@ -13,7 +13,7 @@ are off — these are intrinsic sampling resolutions.
 | Geometry | files | fit | events |
 |---|---|---|---|
 | **single** 14×14 module | `energy_resolution.{pdf,png}`, `resolution_summary.csv` | **11.75%/√E ⊕ 0.58%** | 2000/E, 9 pts (5–200 GeV) |
-| **enhanced** (single 18×18, 9 caps) | `energy_resolution_enhanced.{pdf,png}`, `resolution_summary_enhanced.csv` | see file | 800/E, 5 pts (quick) |
+| **enhanced** (single 18×18, 9 caps) | `energy_resolution_enhanced.{pdf,png}`, `resolution_summary_enhanced.csv` | **10.5%/√E ⊕ 0.0%** | 800/E, 5 pts (quick) |
 | **hex** (7 caps) | `energy_resolution_hex.{pdf,png}`, `resolution_summary_hex.csv` | **12.2%/√E ⊕ 0.24%** | 800/E, 5 pts (quick) |
 | **array3x3** (9-module array) | `energy_resolution_array3x3.{pdf,png}`, `resolution_summary_array3x3.csv` | **8.0%/√E ⊕ 0.53%** | 800/E, 5 pts (quick) |
 
