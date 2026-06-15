@@ -99,18 +99,20 @@ make -j
 ./radical scan_resolution.mac
 
 # Alternative geometries (energy/containment, optics off):
-./radical scan_array3x3.mac     # 3x3 array of enhanced 18x18 modules (Fig. 28)
+./radical scan_enhanced.mac     # single 18x18 module, 3x3 grid of 9 capillaries (Fig. 28)
+./radical scan_array3x3.mac     # 3x3 array of 9 enhanced modules (containment study)
 ./radical scan_hex.mac          # hexagonal module, 7 capillaries
 ```
 
 ## Geometry modes
 
-Set at PreInit with `/radical/det/geometry single|array3x3|hex` (default `single`):
+Set at PreInit with `/radical/det/geometry single|enhanced|array3x3|hex` (default `single`):
 
 | Mode | Description |
 |---|---|
 | `single` | Baseline 14×14 module (4 corner capillaries + 1 empty central hole) |
-| `array3x3` | 3×3 array of the paper's enhanced 18×18 modules (Fig. 28: 9 capillaries each, thicker LYSO) — for transverse shower **containment** |
+| `enhanced` | **Single** enhanced 18×18 module with a **3×3 grid of 9 capillaries** (Fig. 28), thicker LYSO |
+| `array3x3` | 3×3 **array of 9** enhanced modules — for transverse shower **containment** (paper Section 7) |
 | `hex` | Single hexagonal module (~14 mm flat-to-flat), 7 capillaries (6 ring + 1 centre) |
 
 Each module is built inside an air envelope placed once (single/hex) or 9× (array).

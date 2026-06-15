@@ -1,0 +1,50 @@
+# ENHANCED single-module energy scan: one 18x18 mm module with a 3x3 grid of
+# 9 capillaries (Fig. 28 / Future-Work slide middle image). Optics OFF (fast).
+# This is a SINGLE module (not the 3x3 array of modules - that is scan_array3x3.mac).
+# Analyse with analyze_resolution.py (eTotLyso_MeV / eMod0_MeV).
+
+/radical/det/geometry enhanced
+/radical/det/buildBeamline true
+/run/numberOfThreads 8
+/process/optical/processActivation Cerenkov false
+/process/optical/processActivation Scintillation false
+/run/initialize
+/gun/particle e-
+/radical/gun/spotSize 3.0 mm
+/run/printProgress 500
+
+/analysis/setFileName radical_5GeV
+/gun/energy 5 GeV
+/run/beamOn 2000
+
+/analysis/setFileName radical_25GeV
+/gun/energy 25 GeV
+/run/beamOn 2000
+
+/analysis/setFileName radical_50GeV
+/gun/energy 50 GeV
+/run/beamOn 2000
+
+/analysis/setFileName radical_75GeV
+/gun/energy 75 GeV
+/run/beamOn 2000
+
+/analysis/setFileName radical_100GeV
+/gun/energy 100 GeV
+/run/beamOn 2000
+
+/analysis/setFileName radical_125GeV
+/gun/energy 125 GeV
+/run/beamOn 2000
+
+/analysis/setFileName radical_150GeV
+/gun/energy 150 GeV
+/run/beamOn 2000
+
+/analysis/setFileName radical_175GeV
+/gun/energy 175 GeV
+/run/beamOn 2000
+
+/analysis/setFileName radical_200GeV
+/gun/energy 200 GeV
+/run/beamOn 2000

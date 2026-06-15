@@ -26,7 +26,7 @@ class G4LogicalVolume;
 class G4VSolid;
 class DetectorMessenger;
 
-enum class GeoMode { Single, Array3x3, Hex };
+enum class GeoMode { Single, Enhanced, Array3x3, Hex };
 
 class DetectorConstruction : public G4VUserDetectorConstruction
 {

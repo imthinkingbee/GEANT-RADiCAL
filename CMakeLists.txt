@@ -51,6 +51,7 @@ set(RADICAL_MACROS
   macros/scan_resolution.mac
   macros/scan_energy_fast.mac
   macros/scan_timing.mac
+  macros/scan_enhanced.mac
   macros/scan_array3x3.mac
   macros/scan_hex.mac
 )

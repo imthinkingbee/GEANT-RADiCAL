@@ -52,6 +52,7 @@ DetectorConstruction::~DetectorConstruction()
 void DetectorConstruction::SetGeometry(const G4String& name)
 {
   if      (name == "single")   fMode = GeoMode::Single;
+  else if (name == "enhanced") fMode = GeoMode::Enhanced;
   else if (name == "array3x3") fMode = GeoMode::Array3x3;
   else if (name == "hex")      fMode = GeoMode::Hex;
   else G4cout << "[RADiCAL] unknown geometry '" << name
@@ -82,8 +83,10 @@ DetectorConstruction::ModuleSpec DetectorConstruction::MakeSpec() const
     s.holes.push_back({{-o, -o}, kCornerHoleDia, true});
     s.holes.push_back({{ 0,  0}, kCentralHoleDia, false}); // empty (air)
   }
-  else if (fMode == GeoMode::Array3x3) {
-    // Enhanced 18x18 module (Fig. 28): 9 caps on a 3x3 grid, thicker LYSO.
+  else if (fMode == GeoMode::Enhanced || fMode == GeoMode::Array3x3) {
+    // Enhanced 18x18 module (Fig. 28): one module with a 3x3 grid of 9
+    // capillaries (corners + edge-midpoints + centre), thicker LYSO. The
+    // Array3x3 mode tiles 9 of these; Enhanced is a single such module.
     s.hexagonal = false; s.tileXY = kEnhTileXY; s.lysoThick = kEnhLysoThick;
     for (int iy = 1; iy >= -1; --iy)
       for (int ix = -1; ix <= 1; ++ix)

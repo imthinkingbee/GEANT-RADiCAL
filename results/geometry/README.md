@@ -8,8 +8,9 @@ per geometry.
 | File | Geometry |
 |---|---|
 | `geometry_single.{pdf,png}` | Baseline 14×14 module: 29 LYSO (cyan) / 28 W (grey) plates, Tyvek, 4 corner capillaries + 1 empty central hole |
-| `geometry_array3x3.{pdf,png}` | 3×3 array of enhanced 18×18 modules (Fig. 28): 9 capillaries each on a 3×3 grid |
+| `geometry_enhanced.{pdf,png}` | **Single** enhanced 18×18 module with a **3×3 grid of 9 capillaries** (Fig. 28) |
 | `geometry_hex.{pdf,png}` | Hexagonal module: 7 capillaries (6 ring + 1 centre) |
+| `geometry_array3x3.{pdf,png}` | 3×3 **array of 9** enhanced modules (paper Section 7 containment study) |
 
 In the cross-sections the green squares are the SiPM faces at the capillary ends
 (viewed down the beam axis). The cross-section hole patterns reproduce the

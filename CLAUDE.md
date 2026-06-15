@@ -65,9 +65,13 @@ number (touchable depth 1); layer = LYSO copy number (depth 0).** This is how
 `CaloSD` and SiPM detection tag the module. `MakeSpec()` defines each mode's tile
 shape, plate thickness and hole list; `BuildModuleEnvelope()` builds it.
 - `single` — baseline 14×14 module: 4 corner caps + 1 empty central hole (Fig. 2).
-- `array3x3` — 3×3 of the enhanced **18×18** module (Fig. 28): 9 caps on a 3×3
-  grid (corners+edges+centre), LYSO 3.0 mm (`kEnhLysoThick`, ESTIMATE = 2×). Pitch
-  = tile+2·Tyvek+gap. 9 modules → copy 0..8 (row-major, centre = 4).
+- `enhanced` — **single** 18×18 module with a **3×3 grid of 9 capillaries** (Fig.
+  28), LYSO 3.0 mm (`kEnhLysoThick`, ESTIMATE = 2×). 1 module. (This is the
+  "9-capillary / 3×3-capillary" design — NOT an array of modules.)
+- `array3x3` — 3×3 ARRAY of 9 of the enhanced modules above, for transverse
+  containment (paper Section 7). Pitch = tile+2·Tyvek+gap. 9 modules → copy 0..8
+  (row-major, centre = 4). `enhanced` and `array3x3` share the same module spec;
+  the only difference is 1 vs 9 envelope placements (see Construct()).
 - `hex` — hexagonal module (`G4Polyhedra`, flat-to-flat 14 mm), 7 caps (6 ring at
   `kHexRingR` + 1 centre), baseline stack.
 - New-geometry constants live in `RadicalConstants.hh` (`kEnh*`, `kHex*`,

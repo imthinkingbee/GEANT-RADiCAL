@@ -14,9 +14,9 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* det)
   fDir->SetGuidance("RADiCAL detector construction controls.");
 
   fGeomCmd = new G4UIcmdWithAString("/radical/det/geometry", this);
-  fGeomCmd->SetGuidance("Geometry mode: single | array3x3 | hex.");
+  fGeomCmd->SetGuidance("Geometry mode: single | enhanced | array3x3 | hex.");
   fGeomCmd->SetParameterName("mode", false);
-  fGeomCmd->SetCandidates("single array3x3 hex");
+  fGeomCmd->SetCandidates("single enhanced array3x3 hex");
   fGeomCmd->AvailableForStates(G4State_PreInit);
 
   fBeamlineCmd = new G4UIcmdWithABool("/radical/det/buildBeamline", this);
