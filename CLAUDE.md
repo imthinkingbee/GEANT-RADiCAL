@@ -57,7 +57,29 @@ Repo: https://github.com/imthinkingbee/GEANT-RADiCAL (branch `main`).
 - `ActionInitialization.{hh,cc}` — wires actions (EventAction shared with
   Stepping/Run on workers).
 
-## Geometry (all in `RadicalConstants.hh`)
+## Geometry modes (`/radical/det/geometry <mode>`, PreInit)
+Three modes, selected at PreInit; default `single`. Each module's internals
+(plate stack + Tyvek wrap + capillaries + SiPMs) live in ONE air **envelope** LV,
+placed once (single/hex) or 9× (array). **Module index = envelope placement copy
+number (touchable depth 1); layer = LYSO copy number (depth 0).** This is how
+`CaloSD` and SiPM detection tag the module. `MakeSpec()` defines each mode's tile
+shape, plate thickness and hole list; `BuildModuleEnvelope()` builds it.
+- `single` — baseline 14×14 module: 4 corner caps + 1 empty central hole (Fig. 2).
+- `array3x3` — 3×3 of the enhanced **18×18** module (Fig. 28): 9 caps on a 3×3
+  grid (corners+edges+centre), LYSO 3.0 mm (`kEnhLysoThick`, ESTIMATE = 2×). Pitch
+  = tile+2·Tyvek+gap. 9 modules → copy 0..8 (row-major, centre = 4).
+- `hex` — hexagonal module (`G4Polyhedra`, flat-to-flat 14 mm), 7 caps (6 ring at
+  `kHexRingR` + 1 centre), baseline stack.
+- New-geometry constants live in `RadicalConstants.hh` (`kEnh*`, `kHex*`,
+  `kArray*`, `kMaxModules=9`). Scan macros: `scan_array3x3.mac`, `scan_hex.mac`
+  (optics off, energy/containment).
+- Ntuple gained `eMod0..8_MeV` + `peMod0..8` (per-module energy / p.e.). For
+  `single` only index 0 is used (`eMod0==eTotLyso`). `eTotLyso`/`eLayer`/`eSM*`
+  use the **struck** module (max-energy); for array that's the central one.
+- Verified: single 50 GeV ≈ 6.7 GeV (unchanged); array central containment ≈ 76 %
+  with symmetric neighbour leakage; hex ≈ 5.2 GeV (smaller area). No overlaps.
+
+## Geometry (baseline single module; all numbers in `RadicalConstants.hh`)
 - Module 14×14 mm² cross-section; active stack 119.1 mm (centred at z=0, beam +z).
 - 29 LYSO (1.5 mm) interleaved 28 W (2.5 mm); pattern `LYSO (T W T)…LYSO`.
 - **Tyvek 0.1 mm between EVERY interface (56 sheets) + a 0.1 mm Tyvek outer wrap**

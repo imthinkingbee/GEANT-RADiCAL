@@ -36,8 +36,10 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
       if (fBoundary->GetStatus() == Detection) {
         auto vol = post->GetPhysicalVolume();
         if (vol && vol->GetName() == "SiPM") {
-          G4int ch = post->GetTouchableHandle()->GetCopyNumber(0);
-          fEvent->AddSiPMDetection(ch, post->GetGlobalTime());
+          auto th = post->GetTouchableHandle();
+          G4int ch     = th->GetCopyNumber(0);   // SiPM channel
+          G4int module = th->GetCopyNumber(1);   // module envelope
+          fEvent->AddSiPMDetection(ch, module, post->GetGlobalTime());
         }
       }
     }

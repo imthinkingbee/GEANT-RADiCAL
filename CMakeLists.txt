@@ -51,6 +51,8 @@ set(RADICAL_MACROS
   macros/scan_resolution.mac
   macros/scan_energy_fast.mac
   macros/scan_timing.mac
+  macros/scan_array3x3.mac
+  macros/scan_hex.mac
 )
 foreach(_mac ${RADICAL_MACROS})
   configure_file(${PROJECT_SOURCE_DIR}/${_mac} ${PROJECT_BINARY_DIR}/ COPYONLY)

@@ -12,6 +12,7 @@ class G4UIdirectory;
 class G4UIcmdWithABool;
 class G4UIcmdWithADouble;
 class G4UIcmdWithADoubleAndUnit;
+class G4UIcmdWithAString;
 
 class DetectorMessenger : public G4UImessenger
 {
@@ -24,6 +25,7 @@ class DetectorMessenger : public G4UImessenger
   private:
     DetectorConstruction* fDet;
     G4UIdirectory*        fDir;
+    G4UIcmdWithAString*   fGeomCmd;
     G4UIcmdWithABool*     fBeamlineCmd;
     G4UIcmdWithABool*     fPbGlassCmd;
     G4UIcmdWithABool*     fMcpCmd;

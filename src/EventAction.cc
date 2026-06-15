@@ -18,12 +18,15 @@ using namespace radical;
 void EventAction::BeginOfEventAction(const G4Event*)
 {
   for (auto& v : fPhotonTimes) v.clear();
+  fPeMod.fill(0);
   fPbGlassEdep = fA1Edep = fA2Edep = fMcpEdep = 0.;
 }
 
-void EventAction::AddSiPMDetection(G4int channel, G4double time)
+void EventAction::AddSiPMDetection(G4int channel, G4int module, G4double time)
 {
-  if (channel >= 0 && channel < kNChannels)
+  if (module >= 0 && module < kMaxModules) fPeMod[module]++;
+  // per-channel timing arrays track module 0 only (single-mode channels)
+  if (module == 0 && channel >= 0 && channel < kNChannels)
     fPhotonTimes[channel].push_back(time);
 }
 
@@ -33,8 +36,9 @@ void EventAction::EndOfEventAction(const G4Event* event)
   if (fLysoHCID < 0)
     fLysoHCID = G4SDManager::GetSDMpointer()->GetCollectionID("LYSO_HC");
 
-  std::array<G4double, kNLyso> layerE{};
-  layerE.fill(0.);
+  // per-(module,layer) energy, per-module totals, grand total
+  std::array<G4double, kMaxModules*kNLyso> cell{}; cell.fill(0.);
+  std::array<G4double, kMaxModules> eMod{}; eMod.fill(0.);
   G4double eTot = 0.;
 
   auto hce = event->GetHCofThisEvent();
@@ -43,14 +47,23 @@ void EventAction::EndOfEventAction(const G4Event* event)
     if (hc) {
       for (size_t i = 0; i < hc->entries(); ++i) {
         auto* hit = (*hc)[i];
-        G4int l = hit->GetLayer();
-        if (l >= 0 && l < kNLyso) {
-          layerE[l] = hit->GetEdep();
-          eTot += hit->GetEdep();
+        G4int m = hit->GetModule(), l = hit->GetLayer();
+        if (m >= 0 && m < kMaxModules && l >= 0 && l < kNLyso) {
+          cell[m*kNLyso + l] += hit->GetEdep();
+          eMod[m] += hit->GetEdep();
+          eTot   += hit->GetEdep();
         }
       }
     }
   }
+
+  // struck module = the one with the most energy; its per-layer profile is used
+  // for the shower-max observables and the eLayer columns.
+  G4int struck = 0;
+  for (G4int m = 1; m < kMaxModules; ++m) if (eMod[m] > eMod[struck]) struck = m;
+
+  std::array<G4double, kNLyso> layerE{};
+  for (G4int l = 0; l < kNLyso; ++l) layerE[l] = cell[struck*kNLyso + l];
 
   // shower-max layer (argmax) and energy summed over +/-1, +/-2 tiles
   G4int smLayer = 0;
@@ -121,5 +134,9 @@ void EventAction::EndOfEventAction(const G4Event* event)
   ana->FillNtupleDColumn(nt::kEMcp, fMcpEdep);
   ana->FillNtupleDColumn(nt::kBeamX, beamX);
   ana->FillNtupleDColumn(nt::kBeamY, beamY);
+  for (G4int m = 0; m < kMaxModules; ++m) {
+    ana->FillNtupleDColumn(nt::kEModBase + m, eMod[m]);
+    ana->FillNtupleIColumn(nt::kPeModBase + m, fPeMod[m]);
+  }
   ana->AddNtupleRow();
 }

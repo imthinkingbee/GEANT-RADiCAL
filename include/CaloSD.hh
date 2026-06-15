@@ -15,7 +15,8 @@ class G4HCofThisEvent;
 class CaloSD : public G4VSensitiveDetector
 {
   public:
-    CaloSD(const G4String& name, const G4String& hitsCollectionName, G4int nLayers);
+    CaloSD(const G4String& name, const G4String& hitsCollectionName,
+           G4int nLayers, G4int nModules);
     ~CaloSD() override = default;
 
     void   Initialize(G4HCofThisEvent* hce) override;
@@ -24,6 +25,7 @@ class CaloSD : public G4VSensitiveDetector
   private:
     CaloHitsCollection* fHitsCollection = nullptr;
     G4int fNLayers;
+    G4int fNModules;
     G4int fHCID = -1;
 };
 

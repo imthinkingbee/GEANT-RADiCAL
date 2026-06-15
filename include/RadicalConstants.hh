@@ -83,7 +83,39 @@ namespace radical
   // cover the 1.15 mm capillary end face; exact HDR2 die size not modelled.
   constexpr G4double kSiPMSize  = 1.3 * mm;   // active square side
   constexpr G4double kSiPMThick = 0.3 * mm;
-  constexpr G4int    kNChannels = 8;
+  constexpr G4int    kNChannels = 8;          // per-channel ntuple arrays (module 0)
+
+  //--------------------------------------------------------------------------
+  // Alternative geometries (Section 7 / Fig. 28 + Future-Work slide).
+  // Selected at PreInit via /radical/det/geometry single|array3x3|hex.
+  //
+  //  - ENHANCED 18x18 module (Fig. 28): 9 capillaries on a 3x3 grid (corners +
+  //    edge-midpoints + centre); thicker LYSO to raise sampling fraction. The
+  //    3x3 ARRAY tiles 9 of these for transverse shower containment.
+  //  - HEX module (slide): hexagonal cross-section, 7 capillaries (6 ring + 1
+  //    centre), same longitudinal stack as the baseline module.
+  //--------------------------------------------------------------------------
+  constexpr G4int    kMaxModules = 9;          // 3x3 array upper bound
+
+  // Enhanced module
+  constexpr G4double kEnhTileXY    = 18.0 * mm;     // PAPER: 18x18 mm^2
+  // ESTIMATE: enhanced LYSO thickness 3.0 mm (= 2x baseline). Basis: PAPER says
+  // "increase the thickness of the LYSO:Ce layers ... by a factor of 2" to raise
+  // light collection / sampling fraction; no single global value is quoted.
+  constexpr G4double kEnhLysoThick = 3.0 * mm;
+  constexpr G4double kEnhHoleStep  = 6.0 * mm;      // 3x3 grid pitch within tile
+  constexpr G4double kEnhHoleDia   = 1.3 * mm;      // all 9 are instrumented
+
+  // 3x3 array
+  constexpr G4int    kArraySide = 3;               // 3x3 = 9 modules
+  // Centre-to-centre pitch = enhanced footprint (tile + 2 Tyvek wrap) + gap.
+  constexpr G4double kArrayGap   = 0.2 * mm;
+
+  // Hexagonal module
+  constexpr G4double kHexFlatToFlat = 14.0 * mm;   // apothem = 7 mm
+  constexpr G4double kHexRingR      = 4.0 * mm;     // radius of the 6 ring holes
+  constexpr G4double kHexHoleDia    = 1.3 * mm;
+  constexpr G4int    kHexNRing      = 6;            // + 1 central = 7 holes
 
   //--------------------------------------------------------------------------
   // Overall module envelope (Section 2): 14 x 14 x 135 mm^3.

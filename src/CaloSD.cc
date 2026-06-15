@@ -8,8 +8,9 @@
 
 G4ThreadLocal G4Allocator<CaloHit>* CaloHitAllocator = nullptr;
 
-CaloSD::CaloSD(const G4String& name, const G4String& hitsCollectionName, G4int nLayers)
-  : G4VSensitiveDetector(name), fNLayers(nLayers)
+CaloSD::CaloSD(const G4String& name, const G4String& hitsCollectionName,
+               G4int nLayers, G4int nModules)
+  : G4VSensitiveDetector(name), fNLayers(nLayers), fNModules(nModules)
 {
   collectionName.insert(hitsCollectionName);
 }
@@ -23,9 +24,10 @@ void CaloSD::Initialize(G4HCofThisEvent* hce)
     fHCID = G4SDManager::GetSDMpointer()->GetCollectionID(fHitsCollection);
   hce->AddHitsCollection(fHCID, fHitsCollection);
 
-  // Pre-create one hit per layer so indexing by copy number is direct.
-  for (G4int i = 0; i < fNLayers; ++i)
-    fHitsCollection->insert(new CaloHit(i));
+  // One hit per (module, layer); index = module*nLayers + layer.
+  for (G4int m = 0; m < fNModules; ++m)
+    for (G4int l = 0; l < fNLayers; ++l)
+      fHitsCollection->insert(new CaloHit(m, l));
 }
 
 G4bool CaloSD::ProcessHits(G4Step* step, G4TouchableHistory*)
@@ -33,10 +35,12 @@ G4bool CaloSD::ProcessHits(G4Step* step, G4TouchableHistory*)
   G4double edep = step->GetTotalEnergyDeposit();
   if (edep <= 0.) return false;
 
-  // The LYSO plate copy number is the layer index 0..28.
-  G4int layer = step->GetPreStepPoint()->GetTouchable()->GetCopyNumber(0);
-  if (layer < 0 || layer >= fNLayers) return false;
+  auto touch = step->GetPreStepPoint()->GetTouchable();
+  G4int layer  = touch->GetCopyNumber(0);   // LYSO plate
+  G4int module = touch->GetCopyNumber(1);   // module envelope
+  if (layer < 0 || layer >= fNLayers || module < 0 || module >= fNModules)
+    return false;
 
-  (*fHitsCollection)[layer]->AddEdep(edep);
+  (*fHitsCollection)[module*fNLayers + layer]->AddEdep(edep);
   return true;
 }

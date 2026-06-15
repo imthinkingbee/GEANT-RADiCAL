@@ -44,6 +44,10 @@ RunAction::RunAction()
   ana->CreateNtupleDColumn("eMcp_MeV");         // kEMcp
   ana->CreateNtupleDColumn("beamX_mm");         // kBeamX
   ana->CreateNtupleDColumn("beamY_mm");         // kBeamY
+  for (G4int m = 0; m < kMaxModules; ++m)       // kEModBase: per-module energy
+    ana->CreateNtupleDColumn("eMod" + std::to_string(m) + "_MeV");
+  for (G4int m = 0; m < kMaxModules; ++m)       // kPeModBase: per-module p.e.
+    ana->CreateNtupleIColumn("peMod" + std::to_string(m));
   ana->FinishNtuple();
 }
 

@@ -5,12 +5,19 @@
 #include "G4UIcmdWithABool.hh"
 #include "G4UIcmdWithADouble.hh"
 #include "G4UIcmdWithADoubleAndUnit.hh"
+#include "G4UIcmdWithAString.hh"
 
 DetectorMessenger::DetectorMessenger(DetectorConstruction* det)
   : fDet(det)
 {
   fDir = new G4UIdirectory("/radical/det/");
   fDir->SetGuidance("RADiCAL detector construction controls.");
+
+  fGeomCmd = new G4UIcmdWithAString("/radical/det/geometry", this);
+  fGeomCmd->SetGuidance("Geometry mode: single | array3x3 | hex.");
+  fGeomCmd->SetParameterName("mode", false);
+  fGeomCmd->SetCandidates("single array3x3 hex");
+  fGeomCmd->AvailableForStates(G4State_PreInit);
 
   fBeamlineCmd = new G4UIcmdWithABool("/radical/det/buildBeamline", this);
   fBeamlineCmd->SetGuidance("Build the full beam-test beamline (triggers/MCP/Pb-glass).");
@@ -48,6 +55,7 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* det)
 
 DetectorMessenger::~DetectorMessenger()
 {
+  delete fGeomCmd;
   delete fBeamlineCmd;
   delete fPbGlassCmd;
   delete fMcpCmd;
@@ -59,7 +67,8 @@ DetectorMessenger::~DetectorMessenger()
 
 void DetectorMessenger::SetNewValue(G4UIcommand* cmd, G4String val)
 {
-  if (cmd == fBeamlineCmd) fDet->SetBuildBeamline(fBeamlineCmd->GetNewBoolValue(val));
+  if (cmd == fGeomCmd) fDet->SetGeometry(val);
+  else if (cmd == fBeamlineCmd) fDet->SetBuildBeamline(fBeamlineCmd->GetNewBoolValue(val));
   else if (cmd == fPbGlassCmd) fDet->SetBuildPbGlass(fPbGlassCmd->GetNewBoolValue(val));
   else if (cmd == fMcpCmd) fDet->SetBuildMCP(fMcpCmd->GetNewBoolValue(val));
   else if (cmd == fTrigCmd) fDet->SetBuildTriggers(fTrigCmd->GetNewBoolValue(val));

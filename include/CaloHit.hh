@@ -13,20 +13,21 @@ class CaloHit : public G4VHit
 {
   public:
     CaloHit() = default;
-    explicit CaloHit(G4int layer) : fLayer(layer) {}
+    CaloHit(G4int module, G4int layer) : fModule(module), fLayer(layer) {}
     ~CaloHit() override = default;
 
     inline void* operator new(size_t);
     inline void  operator delete(void*);
 
     void AddEdep(G4double e) { fEdep += e; }
-    G4int    GetLayer() const { return fLayer; }
-    G4double GetEdep()  const { return fEdep; }
-    void SetLayer(G4int l) { fLayer = l; }
+    G4int    GetModule() const { return fModule; }
+    G4int    GetLayer()  const { return fLayer; }
+    G4double GetEdep()   const { return fEdep; }
 
   private:
-    G4int    fLayer = -1;
-    G4double fEdep  = 0.;
+    G4int    fModule = -1;
+    G4int    fLayer  = -1;
+    G4double fEdep   = 0.;
 };
 
 using CaloHitsCollection = G4THitsCollection<CaloHit>;

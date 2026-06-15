@@ -33,7 +33,11 @@ namespace nt
   constexpr G4int kEMcp       = kEA2 + 1;                               // D
   constexpr G4int kBeamX      = kEMcp + 1;                              // D  beam impact x [mm]
   constexpr G4int kBeamY      = kBeamX + 1;                             // D  beam impact y [mm]
-  constexpr G4int kNColumns   = kBeamY + 1;
+  // Per-module LYSO energy and detected p.e. (multi-module geometries). For the
+  // single-module build only index 0 is meaningful. Sized to kMaxModules.
+  constexpr G4int kEModBase   = kBeamY + 1;                             // kMaxModules D
+  constexpr G4int kPeModBase  = kEModBase + radical::kMaxModules;       // kMaxModules I
+  constexpr G4int kNColumns   = kPeModBase + radical::kMaxModules;
 
   // ESTIMATE: leading-edge timing threshold = 5 detected photoelectrons. Basis:
   // arbitrary stand-in for the paper's fixed-threshold high-gain discriminator;

@@ -1,0 +1,57 @@
+# 3x3 ARRAY energy/containment scan (enhanced 18x18 modules, Fig. 28).
+# Optics OFF (fast) -> energy resolution from total deposited LYSO energy summed
+# over all 9 modules, i.e. with transverse shower containment (the array's
+# purpose: reduce the stochastic term vs a single module).
+#
+# Per-module energy is in eMod0..8 (3x3 grid, row-major, centre = eMod4) so you
+# can study lateral leakage. Analyse with analyze_resolution.py as usual
+# (eTotLyso_MeV already sums all modules).
+#
+# NOTE: 9 modules => heavier than the single-module scan. Reduce /run/beamOn or
+# run on a cluster. Beam is centred on the central module (3 mm spot).
+
+/radical/det/geometry array3x3
+/radical/det/buildBeamline true
+/run/numberOfThreads 8
+/process/optical/processActivation Cerenkov false
+/process/optical/processActivation Scintillation false
+/run/initialize
+/gun/particle e-
+/radical/gun/spotSize 3.0 mm
+/run/printProgress 200
+
+/analysis/setFileName radical_5GeV
+/gun/energy 5 GeV
+/run/beamOn 2000
+
+/analysis/setFileName radical_25GeV
+/gun/energy 25 GeV
+/run/beamOn 2000
+
+/analysis/setFileName radical_50GeV
+/gun/energy 50 GeV
+/run/beamOn 2000
+
+/analysis/setFileName radical_75GeV
+/gun/energy 75 GeV
+/run/beamOn 2000
+
+/analysis/setFileName radical_100GeV
+/gun/energy 100 GeV
+/run/beamOn 2000
+
+/analysis/setFileName radical_125GeV
+/gun/energy 125 GeV
+/run/beamOn 2000
+
+/analysis/setFileName radical_150GeV
+/gun/energy 150 GeV
+/run/beamOn 2000
+
+/analysis/setFileName radical_175GeV
+/gun/energy 175 GeV
+/run/beamOn 2000
+
+/analysis/setFileName radical_200GeV
+/gun/energy 200 GeV
+/run/beamOn 2000

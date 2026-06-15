@@ -97,7 +97,28 @@ make -j
 
 # Full resolution scan (5, 25, 50 … 200 GeV), one ROOT file per energy:
 ./radical scan_resolution.mac
+
+# Alternative geometries (energy/containment, optics off):
+./radical scan_array3x3.mac     # 3x3 array of enhanced 18x18 modules (Fig. 28)
+./radical scan_hex.mac          # hexagonal module, 7 capillaries
 ```
+
+## Geometry modes
+
+Set at PreInit with `/radical/det/geometry single|array3x3|hex` (default `single`):
+
+| Mode | Description |
+|---|---|
+| `single` | Baseline 14×14 module (4 corner capillaries + 1 empty central hole) |
+| `array3x3` | 3×3 array of the paper's enhanced 18×18 modules (Fig. 28: 9 capillaries each, thicker LYSO) — for transverse shower **containment** |
+| `hex` | Single hexagonal module (~14 mm flat-to-flat), 7 capillaries (6 ring + 1 centre) |
+
+Each module is built inside an air envelope placed once (single/hex) or 9× (array).
+The ntuple gains `eMod0..8_MeV` (per-module LYSO energy; 3×3 grid row-major,
+centre = `eMod4`) and `peMod0..8` (per-module detected p.e.). `eTotLyso_MeV` sums
+all modules, so `analyze_resolution.py` gives the **containment-corrected** energy
+resolution for the array directly. Geometry constants: `kEnh*`, `kHex*`, `kArray*`
+in `include/RadicalConstants.hh`.
 
 ## Resolution analysis
 

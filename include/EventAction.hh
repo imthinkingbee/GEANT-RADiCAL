@@ -21,7 +21,7 @@ class EventAction : public G4UserEventAction
     void EndOfEventAction(const G4Event* event) override;
 
     // called from SteppingAction
-    void AddSiPMDetection(G4int channel, G4double time);
+    void AddSiPMDetection(G4int channel, G4int module, G4double time);
     void AddPbGlassEdep(G4double e) { fPbGlassEdep += e; }
     void AddA1Edep(G4double e)      { fA1Edep += e; }
     void AddA2Edep(G4double e)      { fA2Edep += e; }
@@ -30,7 +30,9 @@ class EventAction : public G4UserEventAction
   private:
     G4int fLysoHCID = -1;
 
+    // per-channel timing kept for module 0 (the only module in single mode)
     std::array<std::vector<G4double>, radical::kNChannels> fPhotonTimes;
+    std::array<G4int, radical::kMaxModules> fPeMod{};
     G4double fPbGlassEdep = 0.;
     G4double fA1Edep = 0.;
     G4double fA2Edep = 0.;
