@@ -51,10 +51,11 @@ DetectorConstruction::~DetectorConstruction()
 
 void DetectorConstruction::SetGeometry(const G4String& name)
 {
-  if      (name == "single")   fMode = GeoMode::Single;
-  else if (name == "enhanced") fMode = GeoMode::Enhanced;
-  else if (name == "array3x3") fMode = GeoMode::Array3x3;
-  else if (name == "hex")      fMode = GeoMode::Hex;
+  if      (name == "single")    fMode = GeoMode::Single;
+  else if (name == "enhanced")  fMode = GeoMode::Enhanced;
+  else if (name == "enhanced5") fMode = GeoMode::Enhanced5;
+  else if (name == "array3x3")  fMode = GeoMode::Array3x3;
+  else if (name == "hex")       fMode = GeoMode::Hex;
   else G4cout << "[RADiCAL] unknown geometry '" << name
               << "', keeping current." << G4endl;
 }
@@ -91,6 +92,18 @@ DetectorConstruction::ModuleSpec DetectorConstruction::MakeSpec() const
     for (int iy = 1; iy >= -1; --iy)
       for (int ix = -1; ix <= 1; ++ix)
         s.holes.push_back({{ix*kEnhHoleStep, iy*kEnhHoleStep}, kEnhHoleDia, true});
+  }
+  else if (fMode == GeoMode::Enhanced5) {
+    // CONTROL: identical to 'enhanced' (18x18, 3 mm LYSO) but with the original
+    // 5-capillary layout (4 corners + centre) instead of 9. Isolates the effect
+    // of capillary COUNT alone on the energy resolution.
+    s.hexagonal = false; s.tileXY = kEnhTileXY; s.lysoThick = kEnhLysoThick;
+    const G4double o = kEnhHoleStep;
+    s.holes.push_back({{ o,  o}, kEnhHoleDia, true});
+    s.holes.push_back({{ o, -o}, kEnhHoleDia, true});
+    s.holes.push_back({{-o,  o}, kEnhHoleDia, true});
+    s.holes.push_back({{-o, -o}, kEnhHoleDia, true});
+    s.holes.push_back({{ 0,  0}, kEnhHoleDia, true});
   }
   else { // Hex
     s.hexagonal = true; s.tileXY = kHexFlatToFlat;

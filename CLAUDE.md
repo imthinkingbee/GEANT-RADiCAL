@@ -72,6 +72,10 @@ shape, plate thickness and hole list; `BuildModuleEnvelope()` builds it.
   containment (paper Section 7). Pitch = tile+2·Tyvek+gap. 9 modules → copy 0..8
   (row-major, centre = 4). `enhanced` and `array3x3` share the same module spec;
   the only difference is 1 vs 9 envelope placements (see Construct()).
+- `enhanced5` — CONTROL: same as `enhanced` (18×18, 3 mm LYSO) but 5 caps (4
+  corners + centre) not 9. Isolates capillary count: gives the same σ_E/E as
+  `enhanced` (~10.5%/√E), proving the resolution gain is from dimensions/LYSO,
+  not capillaries (energy is optics-off deposited energy; caps are tiny holes).
 - `hex` — hexagonal module (`G4Polyhedra`, flat-to-flat 14 mm), 7 caps (6 ring at
   `kHexRingR` + 1 centre), baseline stack.
 - New-geometry constants live in `RadicalConstants.hh` (`kEnh*`, `kHex*`,

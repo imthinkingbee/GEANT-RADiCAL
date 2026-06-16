@@ -27,6 +27,27 @@ are off — these are intrinsic sampling resolutions.
   array drops the stochastic term to ~8.0%/√E (central module holds ~76 %, the rest
   recovered from neighbours via `eMod0..8`).
 
+## Capillary-count control — `comparison_capillaries.{pdf,png}`
+
+Does the enhanced module's better resolution come from its **capillaries** or its
+**dimensions**? Control: `enhanced5` — identical to `enhanced` (18×18 mm, 3 mm
+LYSO) but with **5 capillaries** instead of 9, so the *only* variable is the
+capillary count.
+
+| Module | capillaries | σ_E/E |
+|---|---|---|
+| `enhanced5` (control) | 5 | 10.41%/√E ⊕ 0.10% |
+| `enhanced` | 9 | 10.54%/√E ⊕ 0.00% |
+
+The two curves overlap (within statistics; 5-cap is even marginally lower since
+fewer holes remove slightly less LYSO). **Conclusion: the capillary count does not
+drive the energy resolution** — the improvement over the 14×14 baseline (11.75%/√E)
+comes from the larger cross-section + thicker LYSO (higher sampling fraction +
+better transverse containment). This is expected: with optics off the resolution
+is from deposited LYSO energy, and the φ1.3 mm capillaries are negligible holes.
+(Capillary count matters for *light collection / timing*, not calorimetric energy.)
+Reproduce: `scan_enhanced.mac` vs the same with `/radical/det/geometry enhanced5`.
+
 The array/hex curves are quick scans (5 points, 800 events) for a first look;
 rerun `scan_array3x3.mac` / `scan_hex.mac` (2000/E, 9 points) for publication
 statistics — ideally on a cluster.
